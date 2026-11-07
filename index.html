@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>愿望小厨房 · 在线外卖点餐</title>
+  <!-- 站点小图标：使用 logo 文件夹中的图片 -->
+  <link rel="icon" href="images/logo/logo.png">
+  <!-- Bootstrap 5.3.7（本地引入，只使用其 CSS；滚动、悬停、弹窗过渡等动效由 CSS 完成，
+       购物车、搜索、注册登录等需要记住状态的功能由 js/main.js 完成） -->
+  <link rel="stylesheet" href="libs/bootstrap/bootstrap.min.css">
+  <!-- Font Awesome 6.7.2 图标库（本地引入） -->
+  <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+  <!-- 站点自定义样式：配色、字体、动效都写在这里 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body id="top">
+
+  <!-- ============================================================ -->
+  <!-- 一、页面顶部：Logo + 店铺名称 / 菜品搜索框 / 注册、登录          -->
+  <!-- ============================================================ -->
+  <header class="site-head">
+    <div class="wrap head-inner">
+
+      <!-- 左侧：logo 与店铺名称 -->
+      <a class="brand" href="#top" aria-label="愿望小厨房 首页">
+        <span class="brand-logo-wrap">
+          <img class="brand-logo" src="images/logo/logo.png" alt="愿望小厨房 logo">
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">愿望小厨房</span>
+          <span class="brand-sub">WISH KITCHEN · 2024</span>
+        </span>
+      </a>
+
+      <!-- 中间：菜品搜索框（使用原生 datalist 给出菜品联想，不写 JS） -->
+      <form class="search-form" action="#meals" role="search">
+        <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+        <input class="search-input" type="search" name="q" list="dish-list"
+               placeholder="搜一搜想吃的菜，比如「鳗鱼饭」" aria-label="搜索菜品">
+        <datalist id="dish-list">
+          <option value="鳗鱼饭"></option>
+          <option value="红烩意大利香肠披萨"></option>
+          <option value="烤牛排"></option>
+          <option value="芝士炸虾"></option>
+          <option value="珍珠奶茶"></option>
+          <option value="枫糖松饼"></option>
+          <option value="蔬菜沙拉"></option>
+        </datalist>
+        <button class="search-btn" type="submit" aria-label="搜索">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </form>
+
+      <!-- 右侧：注册与登录；登录成功后替换为用户头像与昵称 -->
+      <div class="head-actions" id="headActions">
+        <a class="head-link" href="#subscribe" id="registerBtn" role="button">
+          <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+          注册
+        </a>
+        <a class="btn-login" href="#subscribe" id="loginBtn" role="button">
+          <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+          登录
+        </a>
+        <div class="user-chip" id="userChip" hidden>
+          <img src="images/user/露露来了.jpg" alt="露露来了的头像">
+          <span class="user-name">露露来了</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 顶部下方紧接的页面导航：左右两端与顶部内容对齐 -->
+    <nav class="nav-bar" aria-label="主导航">
+      <div class="wrap">
+        <ul class="nav-list">
+          <li><a class="nav-link active" href="#home"><i class="fa-solid fa-house" aria-hidden="true"></i>餐厅首页</a></li>
+          <li><a class="nav-link" href="#meals"><i class="fa-solid fa-utensils" aria-hidden="true"></i>菜品大全</a></li>
+          <li><a class="nav-link" href="#chefs"><i class="fa-solid fa-kitchen-set" aria-hidden="true"></i>厨师团队</a></li>
+          <li><a class="nav-link" href="#environment"><i class="fa-solid fa-image" aria-hidden="true"></i>餐厅环境</a></li>
+          <li><a class="nav-link" href="#notice"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i>餐厅公告</a></li>
+          <li><a class="nav-link" href="#feedback"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i>留言反馈</a></li>
+          <li><a class="nav-link" href="#about"><i class="fa-solid fa-heart" aria-hidden="true"></i>关于我们</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============================================================ -->
+    <!-- 二、首屏 Hero：主视觉大圆盘 + 漂浮小卡片 + 数据展示              -->
+    <!-- ============================================================ -->
+    <section class="hero" id="home">
+      <!-- 背景装饰：动态光斑 -->
+      <span class="hero-blob hero-blob-1" aria-hidden="true"></span>
+      <span class="hero-blob hero-blob-2" aria-hidden="true"></span>
+      <span class="hero-dots" aria-hidden="true"></span>
+
+      <div class="wrap hero-inner">
+        <!-- 左侧文案 -->
+        <div class="hero-copy">
+          <span class="hero-eyebrow">
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+            2027 · 春季新菜单已上线
+          </span>
+          <h1 class="hero-title">
+            把今天的愿望<br>
+            <em class="hero-em">煮</em>成一桌热腾腾的饭
+          </h1>
+          <p class="hero-desc">
+            小院里支起的第一张桌子已经坐了 2 年，厨师们每天清晨 6 点去菜场挑菜，
+            11 点上灶，热菜热饭 30 分钟送到你手上。
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn-main" href="#meals">
+              现在点餐
+              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="btn-ghost" href="#chefs">
+              <i class="fa-solid fa-kitchen-set" aria-hidden="true"></i>
+              认识厨师
+            </a>
+          </div>
+
+          <!-- 首屏四项数据 -->
+          <ul class="hero-stats">
+            <li><strong>2027</strong><span>营业年份</span></li>
+            <li><strong>41</strong><span>在售菜品</span></li>
+            <li><strong>6</strong><span>喂食豆厨师</span></li>
+            <li><strong>4.9</strong><span>平均好评</span></li>
+          </ul>
+        </div>
+
+        <!-- 右侧主视觉：扇翅膀眨眼的小星吉祥物 + 漂浮小卡片 -->
+        <div class="hero-art">
+          <span class="plate-ring" aria-hidden="true"></span>
+          <span class="plate-ring plate-ring-sm" aria-hidden="true"></span>
+
+          <!-- 吉祥物：翅膀 / 身体分层，CSS 控制扇翅与眨眼 -->
+          <div class="mascot" role="img" aria-label="愿望小厨房吉祥物小星，扇动翅膀眨着眼">
+            <img class="mascot-wing mascot-wing-l" src="images/tubiao/wing_left.png" alt="" aria-hidden="true">
+            <img class="mascot-wing mascot-wing-r" src="images/tubiao/wing_right.png" alt="" aria-hidden="true">
+            <img class="mascot-body" src="images/tubiao/body.png" alt="">
+            <!-- 两片眼皮，定时合上模拟眨眼 -->
+            <span class="mascot-lid mascot-lid-l" aria-hidden="true"></span>
+            <span class="mascot-lid mascot-lid-r" aria-hidden="true"></span>
+          </div>
+
+          <!-- 漂浮：今日特色菜品推荐 -->
+          <div class="float-card float-dish">
+            <img src="images/meals/特色菜品-红烩意大利香肠披萨.jpg" alt="红烩意大利香肠披萨">
+            <div>
+              <p class="float-title">今日特色菜品推荐</p>
+              <p class="float-sub">红烩香肠披萨 · <strong>¥58</strong></p>
+            </div>
+          </div>
+
+          <!-- 漂浮：大厨推荐 -->
+          <div class="float-card float-chef">
+            <img src="images/chefs/uniform/kuri大厨.png" alt="kuri 大厨">
+            <div>
+              <p class="float-title">大厨推荐</p>
+              <p class="float-sub">kuri 大厨 · 手工现烤</p>
+            </div>
+          </div>
+
+          <!-- 漂浮：店内环境一览 -->
+          <div class="float-card float-env">
+            <img src="images/kitchenenvironment/1.jpg" alt="店内环境">
+            <div>
+              <p class="float-title">店内环境一览</p>
+              <p class="float-sub">温馨小院 · 绿植餐位</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 三、特色服务条：四个图标 + 短介绍，悬停有上浮和换色动效          -->
+    <!-- ============================================================ -->
+    <section class="features">
+      <div class="wrap">
+        <ul class="feature-strip">
+          <li class="feature-item">
+            <span class="feature-icon"><i class="fa-solid fa-seedling" aria-hidden="true"></i></span>
+            <div>
+              <h3 class="feature-title">每日清晨采购</h3>
+              <p class="feature-text">当天买、当天做，不留隔夜菜</p>
+            </div>
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon"><i class="fa-solid fa-kitchen-set" aria-hidden="true"></i></span>
+            <div>
+              <h3 class="feature-title">6 位手工厨师</h3>
+              <p class="feature-text">小锅小灶，一份一份现炒</p>
+            </div>
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon"><i class="fa-solid fa-truck-fast" aria-hidden="true"></i></span>
+            <div>
+              <h3 class="feature-title">5 公里保温配送</h3>
+              <p class="feature-text">起送 ¥20，30 分钟热着到</p>
+            </div>
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon"><i class="fa-solid fa-ticket" aria-hidden="true"></i></span>
+            <div>
+              <h3 class="feature-title">0221 会员日</h3>
+              <p class="feature-text">每周三全场 8 折，甜品半价</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 四、菜品大全：7 大类 41 道菜                                   -->
+    <!-- 分类切换使用 radio + :has()，全部由 CSS 完成，不写 JS           -->
+    <!-- 排版顺序：全部 / 主食 / 特色菜品 / 荤菜 / 素菜 / 凉菜 / 点心 / 饮料 -->
+    <!-- ============================================================ -->
+    <section class="section meals" id="meals">
+      <div class="wrap">
+
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">01 — DISHES</span>
+            <h2 class="section-title">菜品大全 <span class="title-mark">2024</span></h2>
+            <p class="section-desc">
+              七大类、41 道家常菜，主食 · 特色菜品 · 荤菜 · 素菜 · 凉菜 · 点心 · 饮料，按顺序排好等你挑。
+            </p>
+          </div>
+          <span class="count-badge">
+            <i class="fa-solid fa-bowl-food" aria-hidden="true"></i>
+            41 道 · 7 大类
+          </span>
+        </div>
+
+        <!-- 筛选单选按钮：视觉上隐藏，仅用于控制分类 -->
+        <input class="cat-radio" type="radio" name="mealcat" id="f-all" checked>
+        <input class="cat-radio" type="radio" name="mealcat" id="f-staple">
+        <input class="cat-radio" type="radio" name="mealcat" id="f-special">
+        <input class="cat-radio" type="radio" name="mealcat" id="f-meat">
+        <input class="cat-radio" type="radio" name="mealcat" id="f-veg">
+        <input class="cat-radio" type="radio" name="mealcat" id="f-cold">
+        <input class="cat-radio" type="radio" name="mealcat" id="f-dimsum">
+        <input class="cat-radio" type="radio" name="mealcat" id="f-drink">
+
+        <!-- 分类标签 -->
+        <div class="cat-tabs">
+          <label class="cat-tab" for="f-all">全部 <small>41</small></label>
+          <label class="cat-tab" for="f-staple">主食 <small>6</small></label>
+          <label class="cat-tab" for="f-special">特色菜品 <small>6</small></label>
+          <label class="cat-tab" for="f-meat">荤菜 <small>6</small></label>
+          <label class="cat-tab" for="f-veg">素菜 <small>4</small></label>
+          <label class="cat-tab" for="f-cold">凉菜 <small>5</small></label>
+          <label class="cat-tab" for="f-dimsum">点心 <small>6</small></label>
+          <label class="cat-tab" for="f-drink">饮料 <small>8</small></label>
+        </div>
+
+        <!-- 菜品网格：全部菜品按 主食→特色菜品→荤菜→素菜→凉菜→点心→饮料 排列 -->
+        <div class="meal-grid">
+
+          <!-- ---------- 主食 6 道 ---------- -->
+          <article class="dish cat-staple">
+            <div class="dish-media">
+              <span class="dish-cat">主食</span>
+              <img src="images/meals/主食-凉面.jpg" alt="凉面" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">凉面</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 980</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>18</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-staple">
+            <div class="dish-media">
+              <span class="dish-cat">主食</span>
+              <img src="images/meals/主食-意大利面.jpg" alt="意大利面" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">意大利面</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 1,320</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>32</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-staple">
+            <div class="dish-media">
+              <span class="dish-cat">主食</span>
+              <img src="images/meals/主食-汉堡.jpg" alt="汉堡" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">汉堡</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.7 <span>· 月售 860</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>26</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-staple">
+            <div class="dish-media">
+              <span class="dish-cat">主食</span>
+              <img src="images/meals/主食-煎饺.jpg" alt="煎饺" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">煎饺</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 1,105</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>16</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-staple">
+            <div class="dish-media">
+              <span class="dish-cat">主食</span>
+              <img src="images/meals/主食-鳗鱼饭.jpg" alt="鳗鱼饭" loading="lazy">
+              <span class="dish-hot"><i class="fa-solid fa-fire" aria-hidden="true"></i> 热销</span>
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">鳗鱼饭</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 5.0 <span>· 月售 1,560</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>42</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-staple">
+            <div class="dish-media">
+              <span class="dish-cat">主食</span>
+              <img src="images/meals/主食-麻辣牛肉面.jpg" alt="麻辣牛肉面" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">麻辣牛肉面</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 1,240</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>28</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ---------- 特色菜品 6 道 ---------- -->
+          <article class="dish cat-special">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-special">特色菜品</span>
+              <img src="images/meals/特色菜品-咖喱鸡肉盏.jpg" alt="咖喱鸡肉盏" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">咖喱鸡肉盏</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 760</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>38</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-special">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-special">特色菜品</span>
+              <img src="images/meals/特色菜品-红烧什锦烩汤.jpg" alt="红烧什锦烩汤" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">红烧什锦烩汤</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 645</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>45</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-special">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-special">特色菜品</span>
+              <img src="images/meals/特色菜品-红烩意大利香肠披萨.jpg" alt="红烩意大利香肠披萨" loading="lazy">
+              <span class="dish-hot"><i class="fa-solid fa-fire" aria-hidden="true"></i> 热销</span>
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">红烩意大利香肠披萨</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 5.0 <span>· 月售 1,880</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>58</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-special">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-special">特色菜品</span>
+              <img src="images/meals/特色菜品-芝士炸虾.jpg" alt="芝士炸虾" loading="lazy">
+              <span class="dish-hot"><i class="fa-solid fa-fire" aria-hidden="true"></i> 热销</span>
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">芝士炸虾</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 1,430</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>36</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-special">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-special">特色菜品</span>
+              <img src="images/meals/特色菜品-蛤蜊汤.jpg" alt="蛤蜊汤" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">蛤蜊汤</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.7 <span>· 月售 520</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>34</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-special">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-special">特色菜品</span>
+              <img src="images/meals/特色菜品-青椒酿肉.jpg" alt="青椒酿肉" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">青椒酿肉</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 690</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>28</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ---------- 荤菜 6 道 ---------- -->
+          <article class="dish cat-meat">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-meat">荤菜</span>
+              <img src="images/meals/荤菜-回锅肉.jpg" alt="回锅肉" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">回锅肉</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 1,150</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>36</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-meat">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-meat">荤菜</span>
+              <img src="images/meals/荤菜-炸猪排.jpg" alt="炸猪排" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">炸猪排</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 930</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>32</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-meat">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-meat">荤菜</span>
+              <img src="images/meals/荤菜-烤牛排.jpg" alt="烤牛排" loading="lazy">
+              <span class="dish-hot"><i class="fa-solid fa-fire" aria-hidden="true"></i> 热销</span>
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">烤牛排</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 5.0 <span>· 月售 1,020</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>68</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-meat">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-meat">荤菜</span>
+              <img src="images/meals/荤菜-生蚝.jpg" alt="生蚝" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">生蚝</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 540</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>48</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-meat">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-meat">荤菜</span>
+              <img src="images/meals/荤菜-青椒牛肋条.jpg" alt="青椒牛肋条" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">青椒牛肋条</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 810</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>52</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-meat">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-meat">荤菜</span>
+              <img src="images/meals/荤菜-黄金炸鸡.jpg" alt="黄金炸鸡" loading="lazy">
+              <span class="dish-hot"><i class="fa-solid fa-fire" aria-hidden="true"></i> 热销</span>
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">黄金炸鸡</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 1,760</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>29</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ---------- 素菜 4 道 ---------- -->
+          <article class="dish cat-veg">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-veg">素菜</span>
+              <img src="images/meals/素菜-木鱼花豆腐.jpg" alt="木鱼花豆腐" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">木鱼花豆腐</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 720</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>22</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-veg">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-veg">素菜</span>
+              <img src="images/meals/素菜-蒜蓉油麦菜.jpg" alt="蒜蓉油麦菜" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">蒜蓉油麦菜</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.7 <span>· 月售 640</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>18</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-veg">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-veg">素菜</span>
+              <img src="images/meals/素菜-韭菜炒鸡蛋.jpg" alt="韭菜炒鸡蛋" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">韭菜炒鸡蛋</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 880</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>20</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-veg">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-veg">素菜</span>
+              <img src="images/meals/素菜-麻婆茄子.jpg" alt="麻婆茄子" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">麻婆茄子</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 950</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>24</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ---------- 凉菜 5 道 ---------- -->
+          <article class="dish cat-cold">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-cold">凉菜</span>
+              <img src="images/meals/凉菜-芝麻淋卷心菜.jpg" alt="芝麻淋卷心菜" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">芝麻淋卷心菜</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.7 <span>· 月售 430</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>16</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-cold">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-cold">凉菜</span>
+              <img src="images/meals/凉菜-苦瓜卷.jpg" alt="苦瓜卷" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">苦瓜卷</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 510</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>14</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-cold">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-cold">凉菜</span>
+              <img src="images/meals/凉菜-蔬菜拌凉面.jpg" alt="蔬菜拌凉面" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">蔬菜拌凉面</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.7 <span>· 月售 470</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>18</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-cold">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-cold">凉菜</span>
+              <img src="images/meals/凉菜-蔬菜沙拉.jpg" alt="蔬菜沙拉" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">蔬菜沙拉</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 1,010</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>22</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-cold">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-cold">凉菜</span>
+              <img src="images/meals/凉菜-黄瓜拌海带.jpg" alt="黄瓜拌海带" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">黄瓜拌海带</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 620</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>16</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ---------- 点心 6 道 ---------- -->
+          <article class="dish cat-dimsum">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-dimsum">点心</span>
+              <img src="images/meals/点心-奶油布丁.jpg" alt="奶油布丁" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">奶油布丁</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 1,060</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>14</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-dimsum">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-dimsum">点心</span>
+              <img src="images/meals/点心-巧克力甜甜圈.jpg" alt="巧克力甜甜圈" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">巧克力甜甜圈</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 930</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>12</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-dimsum">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-dimsum">点心</span>
+              <img src="images/meals/点心-枫糖松饼.jpg" alt="枫糖松饼" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">枫糖松饼</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 1,220</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>18</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-dimsum">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-dimsum">点心</span>
+              <img src="images/meals/点心-椒盐碱水结.jpg" alt="椒盐碱水结" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">椒盐碱水结</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.7 <span>· 月售 560</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>12</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-dimsum">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-dimsum">点心</span>
+              <img src="images/meals/点心-蓝莓奶油松饼.jpg" alt="蓝莓奶油松饼" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">蓝莓奶油松饼</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 5.0 <span>· 月售 1,340</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>20</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-dimsum">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-dimsum">点心</span>
+              <img src="images/meals/点心-蛋包卷.jpg" alt="蛋包卷" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">蛋包卷</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 780</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>16</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ---------- 饮料 8 道 ---------- -->
+          <article class="dish cat-drink">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-drink">饮料</span>
+              <img src="images/meals/饮料-冰柠檬水.jpg" alt="冰柠檬水" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">冰柠檬水</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 1,150</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>10</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-drink">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-drink">饮料</span>
+              <img src="images/meals/饮料-冰水.jpg" alt="冰水" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">冰水</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.6 <span>· 月售 640</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>6</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-drink">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-drink">饮料</span>
+              <img src="images/meals/饮料-冰美式.jpg" alt="冰美式" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">冰美式</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 1,260</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>15</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-drink">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-drink">饮料</span>
+              <img src="images/meals/饮料-咖啡.jpg" alt="咖啡" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">咖啡</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 1,090</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>18</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-drink">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-drink">饮料</span>
+              <img src="images/meals/饮料-珍珠奶茶.jpg" alt="珍珠奶茶" loading="lazy">
+              <span class="dish-hot"><i class="fa-solid fa-fire" aria-hidden="true"></i> 热销</span>
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">珍珠奶茶</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 2,040</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>16</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-drink">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-drink">饮料</span>
+              <img src="images/meals/饮料-红酒.jpg" alt="红酒" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">红酒</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 320</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>45</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-drink">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-drink">饮料</span>
+              <img src="images/meals/饮料-蔓越莓冰沙.jpg" alt="蔓越莓冰沙" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">蔓越莓冰沙</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.9 <span>· 月售 870</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>20</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dish cat-drink">
+            <div class="dish-media">
+              <span class="dish-cat dish-cat-drink">饮料</span>
+              <img src="images/meals/饮料-蜜瓜奶油苏打.jpg" alt="蜜瓜奶油苏打" loading="lazy">
+            </div>
+            <div class="dish-body">
+              <h3 class="dish-name">蜜瓜奶油苏打</h3>
+              <p class="dish-meta"><i class="fa-solid fa-star" aria-hidden="true"></i> 4.8 <span>· 月售 1,010</span></p>
+              <div class="dish-foot">
+                <span class="dish-price"><small>¥</small>18</span>
+                <a class="dish-order" href="#feedback"><i class="fa-solid fa-circle-plus" aria-hidden="true"></i> 点单</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 末行补位卡片：41 道菜在 4 列网格里会空出 3 格，
+               用这张「隐藏菜单」卡片补满，仅在「全部」分类下显示 -->
+          <article class="dish-cta">
+            <span class="dish-cta-mark" aria-hidden="true"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+            <span class="dish-cta-eyebrow">MORE THAN 41</span>
+            <h3 class="dish-cta-title">菜单之外，还藏着一份私房菜单</h3>
+            <p class="dish-cta-text">想吃的菜、想念的味道，写在留言里，第二天也许就会出现在菜单上。</p>
+            <a class="dish-cta-btn" href="#feedback">去留言点单 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 五、厨师团队：6 位厨师，头像取自 images/chefs，文件名即姓名        -->
+    <!-- ============================================================ -->
+    <section class="section chefs" id="chefs">
+      <span class="chef-blob" aria-hidden="true"></span>
+      <div class="wrap">
+        <div class="section-head section-head-center">
+          <span class="eyebrow">02 — CHEFS</span>
+          <h2 class="section-title">厨师团队</h2>
+          <p class="section-desc">六位喂食豆厨师，六口小锅，六种拿手味道。</p>
+        </div>
+
+        <!-- 厨师顺序：红薯 → kuri → 奶茶猫 → 叮特 → ryon → saku -->
+        <div class="chef-grid">
+
+          <article class="chef-card">
+            <div class="chef-photo">
+              <img src="images/chefs/uniform/红薯大厨.png" alt="红薯 大厨" loading="lazy">
+            </div>
+            <h3 class="chef-name">红薯</h3>
+            <span class="chef-role">行政主厨</span>
+            <p class="chef-sign">招牌：烤牛排</p>
+            <p class="chef-word">“掌握牛肉的一百八十种做法，牛见了都害怕。”</p>
+          </article>
+
+          <article class="chef-card">
+            <div class="chef-photo">
+              <img src="images/chefs/uniform/kuri大厨.png" alt="kuri 大厨" loading="lazy">
+            </div>
+            <h3 class="chef-name">kuri</h3>
+            <span class="chef-role">主食主厨</span>
+            <p class="chef-sign">招牌：鳗鱼饭</p>
+            <p class="chef-word">“吃饭是生命的动力啊。”</p>
+          </article>
+
+          <article class="chef-card">
+            <div class="chef-photo">
+              <img src="images/chefs/uniform/奶茶猫大厨.png" alt="奶茶猫 大厨" loading="lazy">
+            </div>
+            <h3 class="chef-name">奶茶猫</h3>
+            <span class="chef-role">饮品主厨</span>
+            <p class="chef-sign">招牌：珍珠奶茶</p>
+            <p class="chef-word">“每一杯都摇满221下，厨师绝对不会偷喝。”</p>
+          </article>
+
+          <article class="chef-card">
+            <div class="chef-photo">
+              <img src="images/chefs/uniform/叮特大厨.png" alt="叮特 大厨" loading="lazy">
+            </div>
+            <h3 class="chef-name">叮特</h3>
+            <span class="chef-role">点心主厨</span>
+            <p class="chef-sign">招牌：蓝莓奶油松饼</p>
+            <p class="chef-word">“吃点甜的让心情好一点吧！祝你度过美好的一天~”</p>
+          </article>
+
+          <article class="chef-card">
+            <div class="chef-photo">
+              <img src="images/chefs/uniform/ryon大厨.png" alt="ryon 大厨" loading="lazy">
+            </div>
+            <h3 class="chef-name">ryon</h3>
+            <span class="chef-role">热菜主厨</span>
+            <p class="chef-sign">招牌：炸猪排</p>
+            <p class="chef-word">“全世界最会炸猪排的人。”</p>
+          </article>
+
+          <article class="chef-card">
+            <div class="chef-photo">
+              <img src="images/chefs/uniform/saku大厨.png" alt="saku 大厨" loading="lazy">
+            </div>
+            <h3 class="chef-name">saku</h3>
+            <span class="chef-role">凉菜主厨</span>
+            <p class="chef-sign">招牌：蔬菜沙拉</p>
+            <p class="chef-word">“小小沙拉虽简单但大有门道，吃萨库大厨的您错不了。”</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 六、餐厅环境 + 厨房环境：8 张环境图拼接 + 6 张厨房图无缝滚动      -->
+    <!-- ============================================================ -->
+    <section class="section environment" id="environment">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">03 — SPACE</span>
+            <h2 class="section-title">餐厅环境</h2>
+            <p class="section-desc">碎花墙、红白格桌布、烛光和旧木门，坐下来就不太想走。</p>
+          </div>
+          <span class="count-badge count-badge-coral">
+            <i class="fa-solid fa-camera-retro" aria-hidden="true"></i>
+            8 个角落 · 随手可拍
+          </span>
+        </div>
+
+        <div class="gallery-grid">
+          <figure class="gallery-item gallery-item-lg">
+            <img src="images/canteenenvironment/1.jpg" alt="餐厅门口的小院与红白格桌布" loading="lazy">
+            <figcaption><strong>门口小院</strong><span>橄榄树下的红白格桌</span></figcaption>
+          </figure>
+          <figure class="gallery-item">
+            <img src="images/canteenenvironment/2.jpg" alt="粉色花墙与甜点柜" loading="lazy">
+            <figcaption><strong>花墙与甜点柜</strong><span>午后两点最上镜</span></figcaption>
+          </figure>
+          <figure class="gallery-item">
+            <img src="images/canteenenvironment/3.jpg" alt="碎花客厅与粉色吧台" loading="lazy">
+            <figcaption><strong>碎花客厅</strong><span>粉色吧台与瓷盘墙</span></figcaption>
+          </figure>
+          <figure class="gallery-item">
+            <img src="images/canteenenvironment/4.jpg" alt="碎花墙、圆桌与木椅" loading="lazy">
+            <figcaption><strong>圆桌旁</strong><span>适合三个人聊天</span></figcaption>
+          </figure>
+          <figure class="gallery-item">
+            <img src="images/canteenenvironment/5.jpg" alt="格纹窗帘与木柜" loading="lazy">
+            <figcaption><strong>格纹窗帘</strong><span>风一吹就想打盹</span></figcaption>
+          </figure>
+          <figure class="gallery-item">
+            <img src="images/canteenenvironment/6.jpg" alt="烛光与花形吊灯" loading="lazy">
+            <figcaption><strong>烛光晚餐</strong><span>花形吊灯亮起来的时候</span></figcaption>
+          </figure>
+          <figure class="gallery-item">
+            <img src="images/canteenenvironment/7.jpg" alt="咖啡吧台与街景" loading="lazy">
+            <figcaption><strong>咖啡吧台</strong><span>窗外就是整条街</span></figcaption>
+          </figure>
+          <figure class="gallery-item gallery-item-wide">
+            <img src="images/canteenenvironment/8.jpg" alt="木质吧台、旧门与绿植" loading="lazy">
+            <figcaption><strong>旧门与绿植</strong><span>2027 年新刷的薄荷绿</span></figcaption>
+          </figure>
+        </div>
+
+        <!-- 厨房环境：纯 CSS 无限滚动横幅，鼠标悬停暂停 -->
+        <div class="kitchen-head">
+          <h3 class="kitchen-title"><i class="fa-solid fa-kitchen-set" aria-hidden="true"></i> 厨房里的日常</h3>
+          <span class="kitchen-tip"><i class="fa-solid fa-pause" aria-hidden="true"></i> 鼠标移入暂停</span>
+        </div>
+
+        <div class="kitchen-strip">
+          <div class="kitchen-track">
+            <!-- 第一组 -->
+            <figure class="kitchen-shot"><img src="images/kitchenenvironment/1.jpg" alt="厨房一角 01" loading="lazy"><figcaption>厨房一角 01</figcaption></figure>
+            <figure class="kitchen-shot"><img src="images/kitchenenvironment/2.jpg" alt="厨房一角 02" loading="lazy"><figcaption>厨房一角 02</figcaption></figure>
+            <figure class="kitchen-shot"><img src="images/kitchenenvironment/3.jpg" alt="厨房一角 03" loading="lazy"><figcaption>厨房一角 03</figcaption></figure>
+            <figure class="kitchen-shot"><img src="images/kitchenenvironment/4.jpg" alt="厨房一角 04" loading="lazy"><figcaption>厨房一角 04</figcaption></figure>
+            <figure class="kitchen-shot"><img src="images/kitchenenvironment/5.jpg" alt="厨房一角 05" loading="lazy"><figcaption>厨房一角 05</figcaption></figure>
+            <figure class="kitchen-shot"><img src="images/kitchenenvironment/6.jpg" alt="厨房一角 06" loading="lazy"><figcaption>厨房一角 06</figcaption></figure>
+            <!-- 第二组：内容与第一组相同，用于无缝衔接 -->
+            <figure class="kitchen-shot" aria-hidden="true"><img src="images/kitchenenvironment/1.jpg" alt="" loading="lazy"><figcaption>厨房一角 01</figcaption></figure>
+            <figure class="kitchen-shot" aria-hidden="true"><img src="images/kitchenenvironment/2.jpg" alt="" loading="lazy"><figcaption>厨房一角 02</figcaption></figure>
+            <figure class="kitchen-shot" aria-hidden="true"><img src="images/kitchenenvironment/3.jpg" alt="" loading="lazy"><figcaption>厨房一角 03</figcaption></figure>
+            <figure class="kitchen-shot" aria-hidden="true"><img src="images/kitchenenvironment/4.jpg" alt="" loading="lazy"><figcaption>厨房一角 04</figcaption></figure>
+            <figure class="kitchen-shot" aria-hidden="true"><img src="images/kitchenenvironment/5.jpg" alt="" loading="lazy"><figcaption>厨房一角 05</figcaption></figure>
+            <figure class="kitchen-shot" aria-hidden="true"><img src="images/kitchenenvironment/6.jpg" alt="" loading="lazy"><figcaption>厨房一角 06</figcaption></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 七、餐厅公告：2027 年的营业与活动通知                           -->
+    <!-- ============================================================ -->
+    <section class="section notice" id="notice">
+      <div class="wrap">
+        <div class="row align-items-center g-4 g-lg-5">
+
+          <div class="col-lg-7">
+            <span class="eyebrow">04 — NEWS</span>
+            <h2 class="section-title">餐厅公告</h2>
+            <p class="section-desc">2027 年的营业时间、限定菜单和会员日，都写在这里。</p>
+
+            <ul class="notice-list">
+              <li class="notice-item">
+                <span class="notice-date"><strong>03/01</strong><small>2027</small></span>
+                <div class="notice-body">
+                  <h3 class="notice-title">春季新菜 · 蒜蓉油麦菜、木鱼花豆腐上线</h3>
+                  <p class="notice-text">菜场第一批春菜到了，清爽系列今天开始供应。</p>
+                </div>
+                <span class="notice-tag notice-tag-new">NEW</span>
+              </li>
+              <li class="notice-item">
+                <span class="notice-date"><strong>02/10</strong><small>2027</small></span>
+                <div class="notice-body">
+                  <h3 class="notice-title">情人节限定 · 双人套餐立减 52 元</h3>
+                  <p class="notice-text">2 月 14 日当天，双人套餐含甜品与红酒，限量 60 份。</p>
+                </div>
+                <span class="notice-tag">活动</span>
+              </li>
+              <li class="notice-item">
+                <span class="notice-date"><strong>01/18</strong><small>2027</small></span>
+                <div class="notice-body">
+                  <h3 class="notice-title">冬季暖心锅物 · 蛤蜊汤、红烧什锦烩汤</h3>
+                  <p class="notice-text">小锅慢炖 4 小时，每天 11:00 与 17:00 各出一批。</p>
+                </div>
+                <span class="notice-tag">菜单</span>
+              </li>
+              <li class="notice-item">
+                <span class="notice-date"><strong>04/12</strong><small>2027</small></span>
+                <div class="notice-body">
+                  <h3 class="notice-title">五一假期配送时间调整为 11:00 — 20:00</h3>
+                  <p class="notice-text">5 月 1 日至 5 月 3 日，配送半径不变，起送价不变。</p>
+                </div>
+                <span class="notice-tag">配送</span>
+              </li>
+              <li class="notice-item">
+                <span class="notice-date"><strong>05/20</strong><small>2027</small></span>
+                <div class="notice-body">
+                  <h3 class="notice-title">会员日回归 · 每周三全场 8 折</h3>
+                  <p class="notice-text">甜品第二份半价，堂食与外卖同享，不含红酒。</p>
+                </div>
+                <span class="notice-tag">会员</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 右侧：营业时间卡片 -->
+          <div class="col-lg-5">
+            <div class="notice-side">
+              <img src="images/canteenenvironment/4.jpg" alt="愿望小厨房的碎花墙与圆桌" loading="lazy">
+              <div class="notice-side-card">
+                <p class="notice-side-label">2027 · 营业时间</p>
+                <p class="notice-side-time">10:00 — 21:30</p>
+                <p class="notice-side-text">
+                  <i class="fa-solid fa-location-dot" aria-hidden="true"></i> 花园路 221 号 · 愿望小厨房
+                </p>
+                <p class="notice-side-text">
+                  <i class="fa-solid fa-phone" aria-hidden="true"></i> 预订电话 2024-0221
+                </p>
+                <span class="notice-side-badge">
+                  <i class="fa-solid fa-circle-dot" aria-hidden="true"></i> 正在营业
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 八、留言反馈：6 位用户评价 + 留言表单                            -->
+    <!-- ============================================================ -->
+    <section class="section feedback" id="feedback">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">05 — MESSAGES</span>
+            <h2 class="section-title">留言反馈</h2>
+            <p class="section-desc">吃过的客人都留了一句话，你也可以。</p>
+          </div>
+          <span class="count-badge">
+            <i class="fa-solid fa-star" aria-hidden="true"></i>
+            平均 4.9 分
+          </span>
+        </div>
+
+        <div class="review-grid">
+
+          <article class="review-card">
+            <div class="review-head">
+              <img class="review-avatar" src="images/user/一朵风中摇曳的郁金香.jpg" alt="一朵风中摇曳的郁金香的头像" loading="lazy">
+              <div>
+                <h3 class="review-name">一朵风中摇曳的郁金香</h3>
+                <p class="review-date">2027.03.02</p>
+              </div>
+              <i class="fa-solid fa-quote-left review-quote" aria-hidden="true"></i>
+            </div>
+            <p class="review-text">ryon大厨做的炸猪排第一好吃，大家请都来支持我们村第一个大厨！</p>
+            <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          </article>
+
+          <article class="review-card">
+            <div class="review-head">
+              <img class="review-avatar" src="images/user/唯爱帕达蒙.jpg" alt="唯爱帕达蒙的头像" loading="lazy">
+              <div>
+                <h3 class="review-name">唯爱帕达蒙</h3>
+                <p class="review-date">2027.02.21</p>
+              </div>
+              <i class="fa-solid fa-quote-left review-quote" aria-hidden="true"></i>
+            </div>
+            <p class="review-text">减脂期吃这家的蔬菜沙拉是不会出错的，偶尔吃份kuri大厨做的鳗鱼饭也是极好的！</p>
+            <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          </article>
+
+          <article class="review-card">
+            <div class="review-head">
+              <img class="review-avatar" src="images/user/平静的v饺子.jpg" alt="平静的v饺子的头像" loading="lazy">
+              <div>
+                <h3 class="review-name">平静的v饺子</h3>
+                <p class="review-date">2027.01.30</p>
+              </div>
+              <i class="fa-solid fa-quote-left review-quote" aria-hidden="true"></i>
+            </div>
+            <p class="review-text">奶茶哦一西。</p>
+            <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
+          </article>
+
+          <article class="review-card">
+            <div class="review-head">
+              <img class="review-avatar" src="images/user/料包.jpg" alt="料包的头像" loading="lazy">
+              <div>
+                <h3 class="review-name">料包</h3>
+                <p class="review-date">2027.02.14</p>
+              </div>
+              <i class="fa-solid fa-quote-left review-quote" aria-hidden="true"></i>
+            </div>
+            <p class="review-text">蜜瓜苏打太美味了！很清爽解腻！店里的装修也特别好看，下次要带着我的道贡包一起来拍照~</p>
+            <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          </article>
+
+          <article class="review-card">
+            <div class="review-head">
+              <img class="review-avatar" src="images/user/露露来了.jpg" alt="露露来了的头像" loading="lazy">
+              <div>
+                <h3 class="review-name">露露来了</h3>
+                <p class="review-date">2027.03.18</p>
+              </div>
+              <i class="fa-solid fa-quote-left review-quote" aria-hidden="true"></i>
+            </div>
+            <p class="review-text">小狗大厨做的松饼是世间第一美味！</p>
+            <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          </article>
+
+          <article class="review-card">
+            <div class="review-head">
+              <img class="review-avatar" src="images/user/面包大王.jpg" alt="面包大王的头像" loading="lazy">
+              <div>
+                <h3 class="review-name">面包大王</h3>
+                <p class="review-date">2027.04.05</p>
+              </div>
+              <i class="fa-solid fa-quote-left review-quote" aria-hidden="true"></i>
+            </div>
+            <p class="review-text">我一周要吃八次他们家的甜品，炸猪排也特别好吃！</p>
+            <div class="review-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+          </article>
+
+        </div>
+
+        <!-- 留言表单：填写后由 js/main.js 添加到上方留言栏 -->
+        <form class="feedback-form" id="feedbackForm">
+          <div class="feedback-intro">
+            <h3 class="feedback-title">写下你的愿望</h3>
+            <p class="feedback-text">想吃的菜、想改的口味、想说的话，厨师们都会看。</p>
+          </div>
+          <div class="feedback-fields">
+            <input class="feedback-input" type="text" id="feedName" required placeholder="你的昵称" aria-label="你的昵称">
+            <input class="feedback-input" type="email" id="feedEmail" required placeholder="邮箱，方便回复你" aria-label="邮箱">
+            <input class="feedback-input" type="text" id="feedDish" required placeholder="你最想加的一道菜" aria-label="想加的菜">
+            <button class="btn-main btn-main-sm" type="submit">
+              发送留言
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- 九、关于我们：店铺故事 + 数据 + 图片拼贴                        -->
+    <!-- ============================================================ -->
+    <section class="section about" id="about">
+      <div class="wrap about-grid">
+        <div class="about-photo">
+          <img class="about-img-main" src="images/canteenenvironment/5.jpg" alt="愿望小厨房的格纹窗帘与木柜" loading="lazy">
+          <img class="about-img-sub" src="images/kitchenenvironment/1.jpg" alt="愿望小厨房的厨房一角" loading="lazy">
+          <span class="about-logo">
+            <img src="images/logo/logo.png" alt="愿望小厨房 logo">
+          </span>
+        </div>
+
+        <div class="about-copy">
+          <span class="eyebrow">06 — ABOUT</span>
+          <h2 class="section-title">关于我们</h2>
+          <p class="section-desc">
+            2024 年冬天，我们在小院支起第一张桌子，第一天只卖出 9 份凉面。
+            现在有了 6 位厨师、41 道菜和一群固定的老客人，我们还是每天 6 点去买菜。
+          </p>
+
+          <ul class="about-stats">
+            <li><strong>9</strong><span>开业第一天卖出的份数</span></li>
+            <li><strong>41</strong><span>菜单上的家常菜</span></li>
+            <li><strong>2,180</strong><span>每周回头的老客人</span></li>
+            <li><strong>30<span class="unit">min</span></strong><span>平均送达时间</span></li>
+          </ul>
+
+          <div class="about-actions">
+            <a class="btn-main" href="#meals">去看看菜单 <i class="fa-solid fa-utensils" aria-hidden="true"></i></a>
+            <a class="btn-ghost" href="#environment">逛逛小店 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- 十、页脚：关于我们 / 快速链接 / 联系我们 / 订阅我们               -->
+  <!-- 订阅成功弹窗完全由 CSS（:has + checkbox）实现，不使用 JS          -->
+  <!-- ============================================================ -->
+  <footer class="site-footer" id="subscribe">
+    <span class="footer-blob" aria-hidden="true"></span>
+    <div class="wrap">
+      <div class="footer-grid">
+
+        <!-- 第一栏：关于我们 -->
+        <div class="footer-col">
+          <a class="footer-brand" href="#top">
+            <img src="images/logo/logo.png" alt="愿望小厨房 logo">
+            <span>愿望小厨房</span>
+          </a>
+          <h2 class="footer-title">关于我们</h2>
+          <p class="footer-text">
+            一间开在小院里的家常小厨房，喂食豆厨师们每天手工现做，只做热乎的、当天的。
+          </p>
+          <p class="footer-text footer-text-mini">
+            2024 年 · 花园路 221 号 · 每日 10:00 起火
+          </p>
+        </div>
+
+        <!-- 第二栏：快速链接（只有链接，没有小字介绍） -->
+        <div class="footer-col">
+          <h2 class="footer-title">快速链接</h2>
+          <ul class="footer-links">
+            <li><a class="footer-link" href="#home">首页</a></li>
+            <li><a class="footer-link" href="#meals">菜品分类</a></li>
+            <li><a class="footer-link" href="#feedback">商家入驻</a></li>
+            <li><a class="footer-link" href="#meals">热门推荐</a></li>
+            <li><a class="footer-link" href="#notice">优惠活动</a></li>
+          </ul>
+        </div>
+
+        <!-- 第三栏：联系我们 -->
+        <div class="footer-col">
+          <h2 class="footer-title">联系我们</h2>
+          <p class="footer-text">找不到路、想加菜、想包场，都可以直接打电话给我们。</p>
+          <ul class="footer-contact">
+            <li><i class="fa-solid fa-location-dot" aria-hidden="true"></i> 花园路 221 号 · 愿望小厨房</li>
+            <li><i class="fa-solid fa-phone" aria-hidden="true"></i> 2024-0221</li>
+            <li><i class="fa-solid fa-envelope" aria-hidden="true"></i> wish@kitchen2024.com</li>
+            <li><i class="fa-solid fa-clock" aria-hidden="true"></i> 每日 10:00 — 21:30</li>
+          </ul>
+        </div>
+
+        <!-- 第四栏：订阅我们 -->
+        <div class="footer-col">
+          <h2 class="footer-title">订阅我们</h2>
+          <p class="footer-text">每周三一封信，只写新菜、限定活动和 2024 年的小故事。</p>
+
+          <!-- 订阅表单：checkbox 控制弹窗，input:valid 校验邮箱 -->
+          <div class="subscribe-form">
+            <input class="sub-check" type="checkbox" id="sub-check">
+            <div class="subscribe-row">
+              <input class="subscribe-input" type="email" required placeholder="填写您的邮箱" aria-label="订阅邮箱">
+              <label class="subscribe-btn" for="sub-check">
+                订阅
+                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              </label>
+            </div>
+            <p class="sub-tip"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> 请先填写正确的邮箱地址</p>
+
+            <!-- 订阅成功弹窗 -->
+            <div class="sub-modal" role="dialog" aria-modal="true" aria-label="订阅成功">
+              <label class="sub-backdrop" for="sub-check" aria-label="关闭弹窗"></label>
+              <div class="sub-card">
+                <span class="sub-icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></span>
+                <h3 class="sub-title">订阅成功</h3>
+                <p class="sub-text">
+                  小厨房每周三给你写信，2027 年的新菜先告诉你，记得看看邮箱里的「愿望小厨房」。
+                </p>
+                <label class="sub-close" for="sub-check">好的，我等不及啦</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2024 愿望小厨房 · 在线外卖点餐演示页面</p>
+        <p>用一顿热饭，把今天过好一点。</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 返回顶部：纯锚点，悬停有跳动动效 -->
+  <a class="to-top" href="#top" aria-label="返回顶部">
+    <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+  </a>
+
+  <!-- ============================================================ -->
+  <!-- 五、点单浮层：购物车 / 搜索菜品 / 注册登录，交互逻辑见 js/main.js -->
+  <!-- ============================================================ -->
+
+  <!-- 左侧固定购物车按钮，右上角数字为已点菜品数量 -->
+  <button class="cart-fab" id="cartFab" type="button" aria-label="打开购物车">
+    <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+
+  <!-- 每次点菜成功后出现的轻提示（注册/登录等消息也复用它） -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+    <span id="toastText">菜品添加成功</span>
+  </div>
+
+  <!-- 点单成功弹窗：点击页面任意位置即可关闭并回到原来的界面 -->
+  <div class="modal-layer add-toast-layer" id="addToastModal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card add-toast-card" role="dialog" aria-modal="true" aria-label="已成功添加菜品">
+      <i class="fa-solid fa-circle-check add-toast-icon" aria-hidden="true"></i>
+      <p class="add-toast-text">已成功添加菜品</p>
+      <p class="add-toast-tip">点击任意位置关闭</p>
+    </div>
+  </div>
+
+  <!-- 购物车弹窗：菜品清单 + 合计 + 右下角“下单” -->
+  <div class="modal-layer" id="cartModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="cartModal"></div>
+    <div class="modal-card cart-card" role="dialog" aria-modal="true" aria-label="购物车">
+      <button class="modal-x" type="button" data-close="cartModal" aria-label="关闭购物车">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <h3 class="modal-title">我的餐篮</h3>
+      <p class="modal-sub">点好的菜都在这里，看看金额，确认后交给喂食豆师傅。</p>
+      <div class="cart-list" id="cartList"></div>
+      <div class="cart-foot">
+        <div>
+          <span class="cart-total-label">合计</span>
+          <strong class="cart-total" id="cartTotal">¥0</strong>
+        </div>
+        <button class="cart-submit" id="cartCheckout" type="button">
+          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+          下单
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下单成功弹窗 -->
+  <div class="modal-layer" id="checkoutModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="checkoutModal"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="下单成功">
+      <button class="modal-x" type="button" data-close="checkoutModal" aria-label="关闭">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <h3 class="modal-title">下单成功</h3>
+      <p class="modal-sub">您已成功下单，喂食豆师傅们正在快马加鞭赶制中~</p>
+      <div class="modal-actions">
+        <button class="cart-submit" type="button" data-close="checkoutModal">好的，等着开饭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 搜索结果弹窗：图片 + 名称 + 简单介绍 + 右下角动态点单图标 -->
+  <div class="modal-layer" id="searchModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="searchModal"></div>
+    <div class="modal-card search-card" role="dialog" aria-modal="true" aria-label="搜索结果">
+      <button class="modal-x" type="button" data-close="searchModal" aria-label="关闭">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <h3 class="modal-title">找到这道菜</h3>
+      <p class="modal-sub" id="searchSub">看看是不是你想吃的，点右下角就能加入购物车。</p>
+      <div class="search-body" id="searchBody"></div>
+      <div class="search-empty" id="searchEmpty" hidden>没有找到这道菜，换个关键词试试看～</div>
+    </div>
+  </div>
+
+  <!-- 注册弹窗：三个输入框 -->
+  <div class="modal-layer" id="registerModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="registerModal"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="注册">
+      <button class="modal-x" type="button" data-close="registerModal" aria-label="关闭注册">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <h3 class="modal-title">注册账号</h3>
+      <p class="modal-sub">填好下面几项，就能加入愿望小厨房的饭桌。</p>
+      <form class="auth-form" id="registerForm">
+        <input class="auth-input" type="text" id="regAccount" required
+               placeholder="请填写需要注册的邮箱/手机号" autocomplete="username">
+        <input class="auth-input" type="password" id="regPassword" required
+               placeholder="请设置您的密码" autocomplete="new-password">
+        <input class="auth-input" type="password" id="regPassword2" required
+               placeholder="请确定您的密码" autocomplete="new-password">
+        <input class="auth-input" type="text" id="regNickname" required maxlength="20"
+               placeholder="请输入您的昵称" autocomplete="nickname">
+        <!-- 从相册选择头像：点击后调起手机相册 / 文件选择 -->
+        <label class="avatar-pick">
+          <i class="fa-solid fa-image" aria-hidden="true"></i>
+          <span id="avatarPickText">请从相册选择您的头像</span>
+          <input type="file" id="regAvatar" accept="image/*" hidden>
+        </label>
+        <button class="auth-submit" type="submit">注册</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 注册成功后的圆形弹窗：字体使用 DingDing -->
+  <div class="modal-layer" id="welcomeModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="welcomeModal"></div>
+    <div class="modal-card welcome-card" role="dialog" aria-modal="true" aria-label="注册成功">
+      <div class="welcome-circle" id="welcomeCircle">现在加入我们！</div>
+      <p class="welcome-tip">点击圆圈，开始点菜吧</p>
+    </div>
+  </div>
+
+  <!-- 登录弹窗：两个输入框，填完后出现“登录”按钮 -->
+  <div class="modal-layer" id="loginModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="loginModal"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="登录">
+      <button class="modal-x" type="button" data-close="loginModal" aria-label="关闭登录">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <h3 class="modal-title">登录</h3>
+      <p class="modal-sub">两只框都填好，登录按钮就会出现。</p>
+      <form class="auth-form" id="loginForm">
+        <input class="auth-input" type="text" id="loginAccount" required
+               placeholder="请输入您的邮箱/手机号" autocomplete="username">
+        <input class="auth-input" type="password" id="loginPassword" required
+               placeholder="请输入您的密码" autocomplete="current-password">
+        <button class="auth-submit" type="submit" id="loginSubmit" hidden>登录</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 背景音乐：music 文件夹中的曲目，循环播放，音量在 js/main.js 中调低 -->
+  <audio id="bgm" src="music/music.mp3" loop preload="auto"></audio>
+
+  <!-- 页面交互脚本：购物车 / 搜索 / 注册登录（动效仍由 CSS 完成） -->
+  <script src="js/main.js" defer></script>
+
+</body>
+</html>
