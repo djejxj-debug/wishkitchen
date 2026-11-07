@@ -1,0 +1,148 @@
+/* ==========================================================================
+   手机版补充样式（由 mobile.html / mobile-page.html 引入，桌面版 index.html 不受影响）
+   --------------------------------------------------------------------------
+   1) 只在 ≤768px 的小屏生效，页面内容与桌面版完全一致
+   2) 主要处理：顶部紧凑排版、导航横向滑动、单列卡片、弹窗适配手机宽度
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .wrap { padding: 0 16px; }
+  .section { padding: 52px 0; }
+  section[id] { scroll-margin-top: 120px; }   /* 手机顶部更矮，锚点留白同步减小 */
+  .section-desc { font-size: 15px; }
+  .section-title { font-size: 24px; letter-spacing: 1px; }
+
+  /* ---- 顶部：品牌、按钮紧凑排列，搜索框独占一行 ---- */
+  .head-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 8px;
+    padding-top: 14px;
+    padding-bottom: 12px;
+    gap: 10px 8px;
+  }
+  .brand { gap: 8px; min-width: 0; }
+  .brand-logo-wrap { width: 40px; height: 40px; }
+  .brand-name { font-size: 20px; letter-spacing: 0.5px; }
+  .brand-sub { display: none; }
+  .head-actions { gap: 4px; min-width: 0; }
+  .head-actions i { display: none; }   /* 去掉图标给注册/登录留出宽度 */
+  .head-link, .btn-login { padding: 6px 10px; font-size: 12px; }
+  .user-chip { padding: 4px 10px 4px 4px; }
+  .user-name { max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---- 导航：换行展示，七个菜单项全部可见 ---- */
+  .nav-bar { padding: 8px 0 10px; }
+  .nav-list {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px 4px;
+    overflow: visible;
+  }
+  .nav-link {
+    flex: none;
+    padding: 8px 9px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+  .nav-link i { font-size: 13px; }
+
+  /* ---- 首屏 ---- */
+  .hero { padding: 30px 0 70px; }
+  .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .hero-copy { min-width: 0; }
+  .hero-title { font-size: clamp(26px, 8vw, 34px); line-height: 1.3; }
+  .hero-desc { font-size: 15px; }
+  .hero-actions { flex-wrap: wrap; gap: 10px; }
+  .btn-main, .btn-ghost { padding: 12px 20px; font-size: 15px; }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .hero-stats li { min-width: 0; padding: 10px 0; border-left: 0; text-align: center; }
+  .hero-art { min-height: 430px; }
+  .mascot { width: min(250px, 68%); }
+  .plate-ring { width: min(300px, 88%); }
+  .plate-ring-sm { width: min(340px, 98%); }
+  /* 三张漂浮卡片：压缩尺寸并错开到三个角，互不遮挡 */
+  .float-card { padding: 6px 10px 6px 6px; gap: 8px; max-width: 158px; }
+  .float-card img { width: 34px; height: 34px; }
+  .float-title { font-size: 12px; }
+  .float-sub { font-size: 11px; }
+  .float-dish { left: 0; top: 0; }
+  .float-chef { right: 0; top: 8%; }
+  .float-env { left: 0; bottom: 2%; }
+
+  /* ---- 特色服务：四列改单列 ---- */
+  .feature-strip { grid-template-columns: 1fr; gap: 2px; padding: 10px; }
+  .feature-item { padding: 10px 8px; }
+  .feature-icon { width: 42px; height: 42px; font-size: 17px; }
+
+  /* ---- 菜品：分类标签横向滑动，菜品卡片单列 ---- */
+  .cat-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cat-tabs::-webkit-scrollbar { display: none; }
+  .cat-tab { flex: none; padding: 8px 14px; }
+  .meal-grid { grid-template-columns: 1fr; gap: 14px; }
+  .dish-order { padding: 8px 12px; font-size: 13px; }
+  .dish-price { font-size: 18px; }
+
+  /* ---- 厨师团队：单列 ---- */
+  .chef-grid { grid-template-columns: 1fr; gap: 16px; }
+  .chef-photo { width: 150px; height: 150px; }
+
+  /* ---- 餐厅环境：两列小图 ---- */
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 130px; gap: 8px; }
+  .gallery-item { border-width: 2px; }
+
+  /* ---- 公告 / 留言 ---- */
+  .notice-item { padding: 12px 14px; }
+  .feedback-form { padding: 18px 16px; }
+  .feedback-fields { grid-template-columns: 1fr; }
+
+  /* ---- 关于我们 ---- */
+  .about-img-main { height: 240px; }
+  .about-img-sub { height: 130px; right: 0; }
+  .about-stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+  /* ---- 页脚 ---- */
+  .footer-grid { grid-template-columns: 1fr; gap: 22px; }
+
+  /* ---- 悬浮按钮：缩小并避开屏幕边缘 ---- */
+  .cart-fab { width: 48px; height: 48px; left: 5px; bottom: 16px; font-size: 18px; }
+  .to-top { width: 42px; height: 42px; right: 12px; bottom: 16px; }
+
+  /* ---- 弹窗：贴合手机宽度，内容单列 ---- */
+  .modal-layer { padding: 14px; }
+  .modal-card {
+    width: 100%;
+    max-width: 440px;
+    max-height: 86vh;
+    padding: 24px 18px 20px;
+    border-radius: 22px;
+  }
+  .modal-title { font-size: 24px; }
+  .search-body { grid-template-columns: 1fr; gap: 14px; }
+  .search-thumb { width: min(200px, 70%); margin: 0 auto; }
+  .cart-foot { flex-wrap: wrap; gap: 10px; }
+  .welcome-circle { width: min(280px, 80vw); padding: 30px; font-size: 30px; letter-spacing: 3px; }
+
+  /* iOS 输入框字号不小于 16px，避免聚焦时页面自动放大 */
+  .auth-input,
+  .feedback-input,
+  .search-input { font-size: 16px; }
+}
